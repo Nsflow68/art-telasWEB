@@ -1,23 +1,40 @@
+```vue
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import UserNavbar from './UserNavbar.vue'
 import UserFooter from './UserFooter.vue'
 
-defineProps({
+const props = defineProps({
   user: {
     type: Object,
-    required: true
+    required: false
   },
   cartCount: {
     type: Number,
     default: 0
+  },
+  searchQuery: {
+    type: String,
+    default: ''
   }
 })
 
-const products = ref([])
-const loading = ref(false)
+const emit = defineEmits(['selectProduct', 'addToCart'])
 
-const fetchProducts = async () => {
+const products = ref([])
+const loading = ref(true)
+const error = ref(null)
+
+const filteredProducts = computed(() => {
+  if (!props.searchQuery) return products.value;
+  const query = props.searchQuery.toLowerCase();
+  return products.value.filter(product => 
+    product.nombre.toLowerCase().includes(query) || 
+    product.descripcion.toLowerCase().includes(query)
+  );
+});
+
+onMounted(async () => {
   try {
     loading.value = true
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
@@ -30,25 +47,21 @@ const fetchProducts = async () => {
   } finally {
     loading.value = false;
   }
-}
-
-onMounted(() => {
-  fetchProducts()
 })
 </script>
 
 <template>
   <div class="home-container">
-    <UserNavbar :user="user" :cartCount="cartCount" @logout="$emit('logout')" @toggleCart="$emit('toggleCart')" />
+    <!-- Navbar handled by App.vue now -->
     
     <div class="content-wrapper">
-      <h1>Welcome back, <span class="highlight">{{ user.nombre }}</span>!</h1>
+      <h1>Welcome back, <span class="highlight">{{ user ? user.nombre : 'Guest' }}</span>!</h1>
       <p class="subtitle">Here are the products currently in our catalog.</p>
       
       <div v-if="loading" class="loading">Loading products...</div>
       
       <div v-else class="products-grid">
-        <div v-for="product in products" :key="product.id" class="product-card" @click="$emit('selectProduct', product)">
+        <div v-for="product in filteredProducts" :key="product.id" class="product-card" @click="$emit('selectProduct', product)">
           <div class="product-image" v-if="product.imagen">
             <img :src="product.imagen" :alt="product.nombre" />
           </div>
@@ -60,6 +73,9 @@ onMounted(() => {
             <p class="desc">{{ product.descripcion }}</p>
             <div class="price">${{ product.precio }}</div>
             <div class="stock">Stock: {{ product.stock }}</div>
+            <button class="add-btn" @click.stop="$emit('addToCart', product)">
+              Agregar al Carrito 🛒
+            </button>
           </div>
         </div>
         
@@ -220,6 +236,24 @@ h3 {
   font-size: 0.8rem;
   color: #888;
   margin-top: 0.5rem;
+}
+
+.add-btn {
+  width: 100%;
+  margin-top: 1rem;
+  padding: 0.6rem;
+  border: none;
+  background: linear-gradient(90deg, #00f260 0%, #0575e6 100%);
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.3s, transform 0.2s;
+}
+
+.add-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
 }
 
 .loading, .no-products {

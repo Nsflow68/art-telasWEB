@@ -7,6 +7,8 @@ import { AuthModule } from './modules/auth.module';
 import { User } from './entities/user.entity';
 import { Product } from './entities/product.entity';
 import { ProductsModule } from './modules/products.module';
+import { TransbankModule } from './modules/transbank.module';
+import { Order } from './entities/order.entity';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
@@ -14,12 +16,14 @@ import { join } from 'path';
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST || 'mirefugio.c9ie2ckqg3rt.us-east-2.rds.amazonaws.com',
+      host:
+        process.env.DB_HOST ||
+        'mirefugio.c9ie2ckqg3rt.us-east-2.rds.amazonaws.com',
       port: parseInt(process.env.DB_PORT || '5432'),
       username: process.env.DB_USER || 'mirefugio_owner',
       password: process.env.DB_PASSWORD || 'Mirefugio2025!',
       database: process.env.DB_NAME || 'mirefugio',
-      entities: [User, Product],
+      entities: [User, Product, Order],
       // WARNING: synchronize: true should NOT be used in production - strictly for dev/prototyping as per request
       synchronize: true,
       ssl: {
@@ -34,6 +38,7 @@ import { join } from 'path';
     UsersModule,
     AuthModule,
     ProductsModule,
+    TransbankModule,
   ],
   controllers: [AppController],
   providers: [AppService],

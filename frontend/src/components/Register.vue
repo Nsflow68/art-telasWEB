@@ -1,5 +1,8 @@
+<script setup>
 import { ref, computed } from 'vue';
 import TermsModal from './TermsModal.vue';
+
+const emit = defineEmits(['goToLogin']);
 
 const form = ref({
   nombre: '',
@@ -39,8 +42,6 @@ const isFormValid = computed(() => {
          form.value.email.includes('@') &&
          validateRut(form.value.rut) &&
          form.value.direccion.length >= 5 &&
-         validateRut(form.value.rut) &&
-         form.value.direccion.length >= 5 &&
          validatePassword(form.value.password);
 });
 
@@ -66,13 +67,11 @@ const handleRegister = async () => {
         const data = await response.json();
         
         if (!response.ok) {
-            // Handle array of errors from class-validator
             const msg = Array.isArray(data.message) ? data.message.join(', ') : data.message;
             throw new Error(msg || 'Registration failed');
         }
 
         alert('Registration successful! Please login.');
-        // Redirect or clear form
         form.value = { nombre: '', apellido: '', email: '', rut: '', direccion: '', password: '' };
     } catch (e) {
         error.value = e.message;
@@ -132,6 +131,10 @@ const handleRegister = async () => {
         <button type="submit" :disabled="loading || !isFormValid" class="submit-btn" :class="{ 'disabled': !isFormValid }">
           {{ loading ? 'Registrando...' : 'Registrar' }}
         </button>
+
+        <p class="toggle-text">
+            ¿Ya tienes cuenta? <a href="#" @click.prevent="$emit('goToLogin')">Inicia sesión aquí</a>
+        </p>
       </form>
     </div>
     
@@ -258,5 +261,22 @@ input.invalid {
 
 .terms-label a:hover {
   text-decoration: underline;
+}
+
+.toggle-text {
+    text-align: center;
+    margin-top: 1rem;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.toggle-text a {
+    color: #00f260;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
 }
 </style>

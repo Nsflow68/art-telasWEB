@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 
-const emit = defineEmits(['loginSuccess'])
+const emit = defineEmits(['loginSuccess', 'goToRegister'])
 
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
+
+// ...
 
 const handleLogin = async () => {
   loading.value = true
@@ -26,7 +28,6 @@ const handleLogin = async () => {
         throw new Error(data.message || 'Login failed');
     }
 
-    // Pass the user data up to the App component
     emit('loginSuccess', data.user)
     
   } catch (e) {
@@ -42,6 +43,7 @@ const handleLogin = async () => {
     <div class="glass-card">
       <h2>Login</h2>
       <form @submit.prevent="handleLogin" class="auth-form">
+        <!-- ... form fields ... -->
         <div class="form-group">
           <label>Email</label>
           <input type="email" v-model="email" required placeholder="email@example.com" />
@@ -57,6 +59,10 @@ const handleLogin = async () => {
         <button type="submit" :disabled="loading" class="submit-btn">
           {{ loading ? 'Logging in...' : 'Login' }}
         </button>
+
+        <p class="toggle-text">
+            ¿No tienes cuenta? <a href="#" @click.prevent="$emit('goToRegister')">Regístrate aquí</a>
+        </p>
       </form>
     </div>
   </div>
@@ -135,5 +141,22 @@ input:focus {
   color: #ff6b6b;
   text-align: center;
   margin-top: 1rem;
+}
+
+.toggle-text {
+    text-align: center;
+    margin-top: 1rem;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.toggle-text a {
+    color: #00f260;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.toggle-text a:hover {
+    text-decoration: underline;
 }
 </style>

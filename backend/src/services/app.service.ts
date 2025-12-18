@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   getHello() {
     return {
-      message: 'Hello from NestJS! Backend is working correctly.'
+      message: 'Hello from NestJS! Backend is working correctly.',
     };
   }
 }

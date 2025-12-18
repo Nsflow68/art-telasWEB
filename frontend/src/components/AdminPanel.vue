@@ -11,6 +11,7 @@ const props = defineProps({
 const activeTab = ref('users')
 const users = ref([])
 const products = ref([])
+const transactions = ref([])
 const showProductModal = ref(false)
 const editingProduct = ref(null)
 
@@ -77,6 +78,18 @@ const fetchProducts = async () => {
   }
 }
 
+const fetchTransactions = async () => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/transbank/transactions`);
+    if (response.ok) {
+      transactions.value = await response.json();
+    }
+  } catch (e) {
+    console.error('Failed to fetch transactions', e);
+  }
+}
+
 const openProductModal = (product = null) => {
   if (product) {
     editingProduct.value = product
@@ -138,6 +151,7 @@ const deleteProduct = async (id) => {
 onMounted(() => {
   fetchUsers()
   fetchProducts()
+  fetchTransactions()
 })
 
 // User Management Logic
@@ -206,6 +220,7 @@ const deleteUser = async (id) => {
       <div class="tabs">
         <button :class="{ active: activeTab === 'users' }" @click="activeTab = 'users'">Users</button>
         <button :class="{ active: activeTab === 'products' }" @click="activeTab = 'products'">Products</button>
+        <button :class="{ active: activeTab === 'transactions' }" @click="activeTab = 'transactions'">Transactions</button>
       </div>
 
       <div class="content-area">
@@ -276,6 +291,37 @@ const deleteUser = async (id) => {
                     <button class="edit-btn" @click="openProductModal(p)">Edit</button>
                     <button class="delete-btn" @click="deleteProduct(p.id)">Delete</button>
                   </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TRANSACTIONS TAB -->
+        <div v-if="activeTab === 'transactions'" class="tab-content">
+          <h2>Transaction History</h2>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>User</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                  <th>Doc Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="t in transactions" :key="t.id">
+                  <td>{{ t.id.substring(0, 8) }}...</td>
+                  <td>{{ new Date(t.createdAt).toLocaleString() }}</td>
+                  <td>{{ t.user ? t.user.email : 'Unknown' }}</td>
+                  <td>${{ t.total }}</td>
+                  <td>
+                    <span :class="['badge', t.status.toLowerCase()]">{{ t.status }}</span>
+                  </td>
+                   <td>{{ t.documentType || '-' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -496,6 +542,9 @@ th {
 }
 .badge.admin { background: #6b4c9a; color: white; }
 .badge.user { background: #2c3e50; color: #ccc; }
+.badge.approved { background: #00f260; color: #000; }
+.badge.rejected { background: #ff4757; color: white; }
+.badge.pending { background: #f39c12; color: #000; }
 
 .actions-cell button {
   margin-right: 0.5rem;
