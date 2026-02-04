@@ -9,7 +9,7 @@ export class Order {
     @Column('decimal', { precision: 10, scale: 2 })
     total: number;
 
-    @Column({ default: 'PENDING' }) // PENDING, APPROVED, REJECTED
+    @Column({ default: 'PENDING' })
     status: string;
 
     @Column({ nullable: true })
@@ -24,13 +24,12 @@ export class Order {
     @CreateDateColumn()
     createdAt: Date;
 
-    // Billing / Electronic Document fields
     @Column({ nullable: true })
-    documentType: string; // 'BOLETA' | 'FACTURA'
+    documentType: string;
 
     @Column({ nullable: true })
-    documentNumber: string; // Folio number
+    documentNumber: string;
 
     @Column({ nullable: true })
-    documentUrl: string; // URL to the PDF
+    documentUrl: string;
 }

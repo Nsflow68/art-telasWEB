@@ -14,12 +14,11 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async register(createUserDto: CreateUserDto): Promise<any> {
     const { email, rut } = createUserDto;
 
-    // Check if user exists
     const existing = await this.usersRepository.findOne({
       where: [{ email }, { rut }],
     });
@@ -30,7 +29,6 @@ export class AuthService {
 
     const newUser = this.usersRepository.create(createUserDto);
 
-    // Auto-assign admin role for testing purposes if email is from duocuc.cl
     if (email.endsWith('@duocuc.cl')) {
       newUser.role = 'admin';
     }
@@ -53,7 +51,6 @@ export class AuthService {
     return {
       message: 'Login successful',
       user: result,
-      // Here usually you return a JWT token
       token: 'mock-jwt-token-for-' + user.id,
     };
   }

@@ -32,7 +32,7 @@ const validateRut = (rut) => {
 };
 
 const validatePassword = (pass) => {
-  // At least 8 chars, 1 uppercase, 1 lowercase, 1 number OR special char
+
   return /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(pass) && pass.length >= 8;
 };
 

@@ -23,16 +23,12 @@ const paymentStatus = ref('');
 const searchQuery = ref('');
 
 onMounted(() => {
-  // Restore user from localStorage
   const savedUser = localStorage.getItem('currentUser');
   if (savedUser) {
     try {
         currentUser.value = JSON.parse(savedUser);
         if (currentUser.value.role === 'admin') {
-           // If we were in admin view? Or just default to home if not specified
-           // currentView.value = 'admin'; // Might be risky if just visiting home
         } else {
-           // Stay on current view or default to home if at login
            if (currentView.value === 'login') {
              currentView.value = 'home';
            }
@@ -48,7 +44,6 @@ onMounted(() => {
   if (status) {
     paymentStatus.value = status;
     currentView.value = 'payment-result';
-    // Clean URL
     window.history.replaceState({}, document.title, window.location.pathname);
   }
 });
@@ -88,14 +83,13 @@ const handleGoToProfile = () => {
 
 const handleGoHome = () => {
     currentView.value = 'home';
-    selectedProduct.value = null; // Deselect product when going home
-    // searchQuery.value = ''; // Optional: clear search on home click? User might prefer it keeps state
+    selectedProduct.value = null;
 };
 
 const handleSearch = (query) => {
     searchQuery.value = query;
     if (currentView.value !== 'home') {
-        currentView.value = 'home'; // Auto-navigate to home to show results
+        currentView.value = 'home';
     }
 };
 
@@ -226,7 +220,6 @@ const handleCheckout = async () => {
     const data = await response.json();
     
     if (data.url && data.token) {
-      // Create a form to post to Transbank
       const form = document.createElement('form');
       form.action = data.url;
       form.method = 'POST';

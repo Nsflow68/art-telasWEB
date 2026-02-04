@@ -24,7 +24,7 @@ const loading = ref(false);
 const uploading = ref(false);
 const message = ref('');
 
-// Initialize form with user data
+
 watch(() => props.user, (newUser) => {
   if (newUser) {
     form.value = { ...newUser };
@@ -74,7 +74,7 @@ const saveProfile = async () => {
     if (response.ok) {
       const updatedUser = await response.json();
       message.value = 'Perfil actualizado correctamente';
-      emit('updateUser', updatedUser); // Notify App.vue to update currentUser
+      emit('updateUser', updatedUser);
     } else {
       message.value = 'Error al actualizar el perfil';
     }

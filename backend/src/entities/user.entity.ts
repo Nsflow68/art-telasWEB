@@ -8,7 +8,6 @@ import {
 import * as bcrypt from 'bcrypt';
 
 import { OneToMany } from 'typeorm';
-// // import { Order } from './order.entity';
 
 @Entity({ name: 'usuario', schema: 'artelas' })
 export class User {

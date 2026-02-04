@@ -12,6 +12,7 @@ const activeTab = ref('users')
 const users = ref([])
 const products = ref([])
 const transactions = ref([])
+const carouselImages = ref([])
 const showProductModal = ref(false)
 const editingProduct = ref(null)
 
@@ -90,6 +91,59 @@ const fetchTransactions = async () => {
   }
 }
 
+const fetchCarouselImages = async () => {
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/carousel`);
+    if (response.ok) {
+      const data = await response.json();
+      carouselImages.value = data.map(img => ({
+        ...img,
+        imageUrl: `${apiUrl}${img.imageUrl}`
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to fetch carousel images', e);
+  }
+}
+
+const handleCarouselUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/carousel`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      fetchCarouselImages();
+    }
+  } catch (e) {
+    console.error('Error uploading carousel image', e);
+  }
+}
+
+const deleteCarouselImage = async (id) => {
+  if (!confirm('Are you sure?')) return;
+  try {
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/carousel/${id}`, {
+      method: 'DELETE'
+    });
+    if (response.ok) {
+      fetchCarouselImages();
+    }
+  } catch (e) {
+    console.error('Error deleting carousel image', e);
+  }
+}
+
 const openProductModal = (product = null) => {
   if (product) {
     editingProduct.value = product
@@ -151,10 +205,11 @@ const deleteProduct = async (id) => {
 onMounted(() => {
   fetchUsers()
   fetchProducts()
+  fetchProducts()
   fetchTransactions()
+  fetchCarouselImages()
 })
 
-// User Management Logic
 const showUserModal = ref(false)
 const editingUser = ref(null)
 const userForm = ref({
@@ -168,7 +223,7 @@ const userForm = ref({
 
 const openUserModal = (user) => {
   editingUser.value = user
-  userForm.value = { ...user } // Copy user data
+  userForm.value = { ...user }
   showUserModal.value = true
 }
 
@@ -221,6 +276,7 @@ const deleteUser = async (id) => {
         <button :class="{ active: activeTab === 'users' }" @click="activeTab = 'users'">Users</button>
         <button :class="{ active: activeTab === 'products' }" @click="activeTab = 'products'">Products</button>
         <button :class="{ active: activeTab === 'transactions' }" @click="activeTab = 'transactions'">Transactions</button>
+        <button :class="{ active: activeTab === 'carousel' }" @click="activeTab = 'carousel'">Carrusel</button>
       </div>
 
       <div class="content-area">
@@ -325,6 +381,26 @@ const deleteUser = async (id) => {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        <!-- CAROUSEL TAB -->
+        <div v-if="activeTab === 'carousel'" class="tab-content">
+          <h2>Gestión del Carrusel</h2>
+          
+          <div class="upload-section" style="margin-bottom: 2rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+            <h3>Subir Nueva Imagen</h3>
+            <input type="file" @change="handleCarouselUpload" accept="image/*" />
+          </div>
+
+          <div class="carousel-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+            <div v-for="img in carouselImages" :key="img.id" class="carousel-item" style="background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 8px;">
+              <img :src="img.imageUrl" style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px;" />
+              <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                <span>ID: {{ img.id }}</span>
+                <button @click="deleteCarouselImage(img.id)" class="delete-btn" style="padding: 0.2rem 0.5rem; font-size: 0.8rem;">Eliminar</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

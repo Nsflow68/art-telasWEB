@@ -17,7 +17,7 @@ import { extname } from 'path';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Get()
   findAll() {
@@ -50,9 +50,6 @@ export class ProductsController {
     }),
   )
   uploadFile(@UploadedFile() file: any) {
-    // Construct the full URL. Assuming backend runs on the same host/port reachable by frontend or proxy.
-    // For local dev, returning the relative path or full URL.
-    // Ideally, use environment variables for host.
     const apiUrl = process.env.API_URL || 'http://localhost:3000';
     return { url: `${apiUrl}/uploads/${file.filename}` };
   }

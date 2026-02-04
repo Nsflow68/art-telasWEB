@@ -14,11 +14,8 @@ export class TransbankController {
     @Get('commit')
     @Post('commit')
     async commit(@Query() query: any, @Body() body: any, @Res() res: Response) {
-        // Handle both success (token_ws) and failure/abort (TBK_TOKEN) cases
-        // Transbank can send these via Body (POST) or Query (GET)
         const token = query.token_ws || body.token_ws || query.TBK_TOKEN || body.TBK_TOKEN;
 
-        // If aborted, token_ws is missing, we might need to handle per logic or just fail
         if (!token) {
             return res.redirect('http://localhost:5173/?payment_status=failure');
         }

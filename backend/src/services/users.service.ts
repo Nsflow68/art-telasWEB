@@ -9,10 +9,9 @@ export class UsersService implements OnModuleInit {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
     private dataSource: DataSource,
-  ) {}
+  ) { }
 
   async onModuleInit() {
-    // Ensure the schema exists
     await this.dataSource.query('CREATE SCHEMA IF NOT EXISTS "artelas"');
   }
 

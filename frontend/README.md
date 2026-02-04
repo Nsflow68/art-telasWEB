@@ -2,38 +2,38 @@
 
 Bienvenido al repositorio del frontend de **Art & Telas**. Esta aplicación es una plataforma de comercio electrónico moderna y ágil, construida utilizando **Vue 3** y **Vite**.
 
-## 📋 Descripción del Proyecto
+##  Descripción del Proyecto
 
 El objetivo de este proyecto es proveer una interfaz de usuario intuitiva y robusta para la compra de telas y artículos de arte, gestionando todo el flujo desde la selección de productos hasta el pago seguro y la administración de órdenes.
 
-## ✨ Características Principales
+##  Características Principales
 
-### 🛍️ Experiencia de Usuario (Cliente)
+###  Experiencia de Usuario (Cliente)
 - **Home Page Dinámica**: Visualización atractiva de productos destacados y navegación fluida.
 - **Detalle de Productos**: Vista detallada con información completa del producto.
 - **Carrito de Compras**: Barra lateral (`CartSidebar`) para una gestión rápida de los productos seleccionados sin salir de la página actual.
 - **Soporte Rápido**: Botón flotante de WhatsApp (`WhatsAppButton`) para contacto directo.
 
-### 🔐 Autenticación y Perfil
+###  Autenticación y Perfil
 - **Registro e Inicio de Sesión**: Formularios seguros para nuevos usuarios y usuarios recurrentes (`Login`, `Register`).
 - **Perfil de Usuario**: Área personal (`UserProfile`) donde los clientes pueden ver su información y estado.
 
-### 💳 Pagos
+###  Pagos
 - **Integración con Transbank**: Flujo de pago completo incluyendo redirección y confirmación (`PaymentResult`).
 
-### 🛠️ Administración
+###  Administración
 - **Panel de Control**: Acceso exclusivo para administradores (`AdminPanel`) que permite:
   - Gestionar el inventario de productos.
   - Visualizar órdenes y transacciones de pagos.
 
-## 💻 Stack Tecnológico
+##  Stack Tecnológico
 
 - **Framework**: [Vue 3](https://vuejs.org/)
 - **Build Tool**: [Vite](https://vitejs.dev/)
 - **Estilos**: CSS Moderno (Vanilla)
 - **Gestor de Paquetes**: npm
 
-## 🚀 Instalación y Configuración
+##  Instalación y Configuración
 
 ### Prerrequisitos
 Asegúrate de tener instalado **Node.js** (versión recomendada 18+).
@@ -56,7 +56,7 @@ Asegúrate de tener instalado **Node.js** (versión recomendada 18+).
     VITE_API_URL=http://localhost:3000/api
     ```
 
-## ▶️ Ejecución
+## ▶ Ejecución
 
 ### Desarrollo
 Para levantar el entorno de desarrollo local con recarga en caliente (HMR):

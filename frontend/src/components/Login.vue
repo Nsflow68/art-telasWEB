@@ -8,7 +8,7 @@ const password = ref('')
 const error = ref('')
 const loading = ref(false)
 
-// ...
+
 
 const handleLogin = async () => {
   loading.value = true

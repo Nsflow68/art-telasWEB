@@ -3,6 +3,7 @@
 import { ref, onMounted, computed } from 'vue'
 import UserNavbar from './UserNavbar.vue'
 import UserFooter from './UserFooter.vue'
+import DeliveriesCarousel from './DeliveriesCarousel.vue'
 
 const props = defineProps({
   user: {
@@ -57,6 +58,11 @@ onMounted(async () => {
     <div class="content-wrapper">
       <h1>Welcome back, <span class="highlight">{{ user ? user.nombre : 'Guest' }}</span>!</h1>
       <p class="subtitle">Here are the products currently in our catalog.</p>
+      
+      <div class="carousel-section">
+        <h2 class="section-title">Nuestras Entregas</h2>
+        <DeliveriesCarousel />
+      </div>
       
       <div v-if="loading" class="loading">Loading products...</div>
       
@@ -261,6 +267,13 @@ h3 {
   font-size: 1.2rem;
   color: #a0a0a0;
   padding: 2rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: white;
+  text-align: center;
 }
 
 </style>
