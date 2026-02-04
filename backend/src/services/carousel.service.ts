@@ -21,9 +21,12 @@ export class CarouselService {
     }
 
     async create(file: Express.Multer.File, title?: string): Promise<CarouselImage> {
-        const imageUrl = `/uploads/${file.filename}`;
+        if (!file) {
+            throw new Error('File is required');
+        }
+        const base64 = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
         const newImage = this.carouselRepository.create({
-            imageUrl,
+            imageUrl: base64,
             title,
         });
         return this.carouselRepository.save(newImage);
@@ -32,18 +35,6 @@ export class CarouselService {
     async remove(id: number): Promise<void> {
         const image = await this.carouselRepository.findOneBy({ id });
         if (image) {
-            // Try to delete file from filesystem
-            try {
-                const filename = image.imageUrl.split('/uploads/')[1];
-                if (filename) {
-                    const filePath = path.join(__dirname, '..', '..', 'uploads', filename);
-                    if (fs.existsSync(filePath)) {
-                        fs.unlinkSync(filePath);
-                    }
-                }
-            } catch (e) {
-                console.error('Error deleting file:', e);
-            }
             await this.carouselRepository.remove(image);
         }
     }

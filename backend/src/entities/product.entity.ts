@@ -17,6 +17,6 @@ export class Product {
   @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'text', nullable: true })
   imagen: string;
 }

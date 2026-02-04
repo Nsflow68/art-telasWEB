@@ -5,7 +5,7 @@ export class CarouselImage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'text' })
   imageUrl: string;
 
   @Column({ nullable: true })

@@ -12,7 +12,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDto } from '../dtos/create-product.dto';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { extname } from 'path';
 
 @Controller('products')
@@ -37,21 +37,13 @@ export class ProductsController {
   @Post('upload-image')
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const randomName = Array(32)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          cb(null, `${randomName}${extname(file.originalname)}`);
-        },
-      }),
+      storage: memoryStorage(),
     }),
   )
   uploadFile(@UploadedFile() file: any) {
-    const apiUrl = process.env.API_URL || 'http://localhost:3000';
-    return { url: `${apiUrl}/uploads/${file.filename}` };
+    if (!file) return { url: null };
+    const base64 = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+    return { url: base64 };
   }
 
   @Patch(':id')
